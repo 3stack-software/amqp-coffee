@@ -37,7 +37,7 @@ class Channel extends EventEmitter
 
     if !@channelTracker?
       @channelTracker = setInterval ()=>
-        if @lastChannelAccess < (Date.now() - @connection.connectionOptions.temporaryChannelTimeout)
+        if @queue.idle() and @lastChannelAccess < (Date.now() - @connection.connectionOptions.temporaryChannelTimeout)
           debug 4, ()->return "Closing channel due to inactivity"
           @close(true)
       , @connection.connectionOptions.temporaryChannelTimeoutCheck
@@ -134,7 +134,7 @@ class Channel extends EventEmitter
   taskPush: ( method, args, okMethod, cb)=> # same as queueSendMethod
     @queue.push {type: 'method', method, args, okMethod, cb}
 
-  taskPushPreflight: ( method, args, okMethod, preflight, cb)=> 
+  taskPushPreflight: ( method, args, okMethod, preflight, cb)=>
     @queue.push {type: 'method', method, args, okMethod, preflight, cb}
 
   taskQueuePushRaw: (task, cb)=>
