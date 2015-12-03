@@ -16,7 +16,6 @@
   }
 , "dependencies": {
     "async": "*",
-    "bson": "~0.3.2",
     "underscore": "*",
     "debug": "*",
     "node-uuid": "*"

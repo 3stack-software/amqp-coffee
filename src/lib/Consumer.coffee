@@ -7,7 +7,6 @@ _         = require('underscore')
 async     = require('async')
 defaults  = require('./defaults')
 
-{BSON} = require('bson').BSONPure
 
 { methodTable, classes, methods } = require('./config').protocol
 { MaxEmptyFrameSize } = require('./config').constants
@@ -94,12 +93,12 @@ class Consumer extends Channel
         # should pause be a different state?
         @consumerState = CONSUMER_STATE_USER_CLOSED
         cb?(err, res)
-    else 
+    else
       cb?()
 
   resume: (cb)->
-    if @consumerState in CONSUMER_STATES_CLOSED 
-      @_consume(cb) 
+    if @consumerState in CONSUMER_STATES_CLOSED
+      @_consume(cb)
     else
       cb?()
 
@@ -234,17 +233,6 @@ class Consumer extends Channel
           get: ()=>
             try
               return JSON.parse message.raw.toString()
-            catch e
-              console.error e
-              return message.raw
-        }
-
-      else if @incomingMessage.properties?.contentType is "application/bson"
-        # we use defineProperty here because we want to keep our original message intact and dont want to pass around a special message
-        Object.defineProperty message, "data", {
-          get: ()=>
-            try
-              return BSON.deserialize message.raw
             catch e
               console.error e
               return message.raw

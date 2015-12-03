@@ -5,7 +5,6 @@ defaults  = require('./defaults')
 
 _         = require('underscore')
 
-{BSON} = require('bson').BSONPure
 
 { methodTable, classes, methods } = require('./config').protocol
 
@@ -78,9 +77,6 @@ class Publisher extends Channel
       # default use JSON
       data = new Buffer(JSON.stringify(data), 'utf8')
       options.contentType = 'application/json'
-
-      # data = BSON.serialize data
-      # options.contentType = 'application/bson'
 
     # increment this as the final step before publishing, to make sure we're in sync with the server
     thisSequenceNumber = @seq++ if @confirm
