@@ -37,9 +37,14 @@ class Channel extends EventEmitter
 
     if !@channelTracker?
       @channelTracker = setInterval ()=>
-        if @queue.idle() and @lastChannelAccess < (Date.now() - @connection.connectionOptions.temporaryChannelTimeout)
-          debug 4, ()->return "Closing channel due to inactivity"
-          @close(true)
+        if @lastChannelAccess < (Date.now() - @connection.connectionOptions.temporaryChannelTimeout)
+          # Adding this as a secondary check, so we can diagnose a production issue.
+          if @queue.idle()
+            debug 4, ()=>return "Closing channel #{@channel} due to inactivity"
+            @close(true)
+          else
+            debug 1, -> "Would've closed the channel #{@channel}, but it's not idle."
+        return
       , @connection.connectionOptions.temporaryChannelTimeoutCheck
 
   open: (cb)->
