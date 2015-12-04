@@ -170,8 +170,9 @@ class Channel extends EventEmitter
       return doneFn('preflight check failed')
 
     if @state is 'closed' and @connection.state is 'open'
-      debug 1, ()->return "Channel reassign"
+      currentChannel = @channel
       @connection.channelManager.channelReassign(@)
+      debug 2, ()=>return "Re-assigned closed channel from #{currentChannel} to #{@channel}"
       @open (e, r)=>
         @_taskWorker(task, done)
 
