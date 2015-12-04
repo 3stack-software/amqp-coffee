@@ -90,7 +90,7 @@ class Channel extends EventEmitter
     @waitForMethod(methods.channelClose, cb) if cb?
 
   close: (auto)=>
-    if !auto? or !auto then debug 1, ()->return "User requested channel close"
+    if !auto? or !auto then debug 2, ()=>return "User requested to close channel #{@channel}"
 
     clearInterval(@channelTracker)
     @channelTracker = null
